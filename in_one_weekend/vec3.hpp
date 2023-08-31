@@ -2,6 +2,7 @@
 #define VEC3_H
 
 #include <cmath>
+#include <string>
 #include <iostream>
 
 using std::sqrt;
