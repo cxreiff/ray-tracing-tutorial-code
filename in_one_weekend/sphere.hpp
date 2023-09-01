@@ -19,9 +19,9 @@ public:
         auto sqrtd = sqrt(discriminant);
 
         auto root = (-b_half - sqrtd) / a;
-        if (ray_t.surrounds(root)) {
+        if (!ray_t.surrounds(root)) {
             root = (-b_half +  sqrtd) / a;
-            if (ray_t.surrounds(root)) {
+            if (!ray_t.surrounds(root)) {
                 return false;
             }
         }
