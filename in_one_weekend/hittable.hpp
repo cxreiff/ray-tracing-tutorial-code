@@ -3,11 +3,15 @@
 
 #include "interval.hpp"
 #include "ray.hpp"
+#include "rtweekend.hpp"
+
+class material;
 
 class hit_record {
 public:
     point3 p;
     vec3 normal;
+    shared_ptr<material> material;
     double t;
     bool front_face;
 
