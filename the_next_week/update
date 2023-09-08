@@ -1,0 +1,1 @@
+make && ./build/main > test.ppm && open test.ppm
