@@ -1,8 +1,10 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "rtw_stb_image.hpp"
 #include "rtweekend.hpp"
 #include "vec3.hpp"
+#include "interval.hpp"
 
 class texture {
   public:
@@ -40,11 +42,10 @@ class checker_texture : public texture {
           odd(make_shared<solid_color>(c2)) {}
 
     color value(double u, double v, const point3& p) const override {
-        auto xInteger = static_cast<int>(std::floor(inv_scale * p.x()));
-        auto yInteger = static_cast<int>(std::floor(inv_scale * p.y()));
-        auto zInteger = static_cast<int>(std::floor(inv_scale * p.z()));
+        auto uInteger = static_cast<int>(std::floor(inv_scale * u));
+        auto vInteger = static_cast<int>(std::floor(inv_scale * v));
 
-        bool isEven = (xInteger + yInteger + zInteger) % 2 == 0;
+        bool isEven = (uInteger + vInteger) % 2 == 0;
 
         return isEven ? even->value(u, v, p) : odd->value(u, v, p);
     }
@@ -53,6 +54,28 @@ class checker_texture : public texture {
     double inv_scale;
     shared_ptr<texture> even;
     shared_ptr<texture> odd;
+};
+
+class image_texture : public texture {
+public:
+  image_texture(const char* filename) : image(filename) {}
+
+  color value(double u, double v, const point3& p) const override {
+    if (image.height() <= 0) return color(0, 1, 1);
+
+    u = interval(0, 1).clamp(u);
+    v = 1.0 - interval(0, 1).clamp(v);
+
+    auto i = static_cast<int>(u * image.width());
+    auto j = static_cast<int>(v * image.height());
+    auto pixel = image.pixel_data(i, j);
+
+    auto color_scale = 1.0 / 255.0;
+    return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
+  }
+
+private:
+  rtw_image image;
 };
 
 #endif
