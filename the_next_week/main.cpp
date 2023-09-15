@@ -117,7 +117,7 @@ void earth() {
 void two_perlin_spheres() {
     hittable_list world;
 
-    auto perlin_texture = make_shared<noise_texture>();
+    auto perlin_texture = make_shared<noise_texture>(4);
     world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(perlin_texture)));
     world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(perlin_texture)));
 
