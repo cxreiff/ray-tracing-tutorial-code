@@ -2,6 +2,8 @@
 #define QUAD_H
 
 #include "hittable.hpp"
+#include "hittable_list.hpp"
+#include "rtweekend.hpp"
 #include "vec3.hpp"
 
 class quad : public hittable {
@@ -72,5 +74,25 @@ class quad : public hittable {
     double D;
     vec3 w;
 };
+
+inline shared_ptr<hittable_list> box(const point3& a, const point3& b, shared_ptr<material> material) {
+    auto sides = make_shared<hittable_list>();
+
+    auto min = point3(fmin(a.x(), b.x()), fmin(a.y(), b.y()), fmin(a.z(), b.z()));
+    auto max = point3(fmax(a.x(), b.x()), fmax(a.y(), b.y()), fmax(a.z(), b.z()));
+
+    auto dx = vec3(max.x() - min.x(), 0, 0);
+    auto dy = vec3(0, max.y() - min.y(), 0);
+    auto dz = vec3(0, 0, max.z() - min.z());
+
+    sides->add(make_shared<quad>(point3(min.x(), min.y(), max.z()), dx, dy, material));
+    sides->add(make_shared<quad>(point3(max.x(), min.y(), max.z()), -dz,  dy, material));
+    sides->add(make_shared<quad>(point3(max.x(), min.y(), min.z()), -dx,  dy, material));
+    sides->add(make_shared<quad>(point3(min.x(), min.y(), min.z()),  dz,  dy, material));
+    sides->add(make_shared<quad>(point3(min.x(), max.y(), max.z()),  dx, -dz, material));
+    sides->add(make_shared<quad>(point3(min.x(), min.y(), min.z()),  dx,  dz, material));
+
+    return sides;
+}
 
 #endif
