@@ -19,13 +19,11 @@ class quad : public hittable {
         w = n / dot(n, n);
     }
 
-    virtual void set_bounding_box() {
-        bbox = aabb(Q, Q + u + v).pad();
-    }
+    virtual void set_bounding_box() { bbox = aabb(Q, Q + u + v).pad(); }
 
     aabb bounding_box() const override { return bbox; }
 
-    bool hit(const ray& r, interval ray_t, hit_record& rec) const override {
+    bool hit(const ray &r, interval ray_t, hit_record &rec) const override {
         auto denominator = dot(normal, r.direction());
 
         if (fabs(denominator) < 1e-8) {
@@ -55,7 +53,7 @@ class quad : public hittable {
         return true;
     }
 
-    virtual bool is_interior(double a, double b, hit_record& rec) const {
+    virtual bool is_interior(double a, double b, hit_record &rec) const {
         if (a < 0 || 1 < a || b < 0 || 1 < b) {
             return false;
         }

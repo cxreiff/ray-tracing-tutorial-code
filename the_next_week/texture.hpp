@@ -1,11 +1,11 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "interval.hpp"
+#include "perlin.hpp"
 #include "rtw_stb_image.hpp"
 #include "rtweekend.hpp"
 #include "vec3.hpp"
-#include "interval.hpp"
-#include "perlin.hpp"
 
 class texture {
   public:
@@ -42,7 +42,7 @@ class checker_texture : public texture {
         : inv_scale(1.0 / _scale), even(make_shared<solid_color>(c1)),
           odd(make_shared<solid_color>(c2)) {}
 
-    color value(double u, double v, const point3& p) const override {
+    color value(double u, double v, const point3 &p) const override {
         auto uInteger = static_cast<int>(std::floor(inv_scale * u));
         auto vInteger = static_cast<int>(std::floor(inv_scale * v));
 
@@ -58,39 +58,44 @@ class checker_texture : public texture {
 };
 
 class image_texture : public texture {
-public:
-  image_texture(const char* filename) : image(filename) {}
+  public:
+    image_texture(const char *filename) : image(filename) {}
 
-  color value(double u, double v, const point3& p) const override {
-    if (image.height() <= 0) return color(0, 1, 1);
+    color value(double u, double v, const point3 &p) const override {
+        if (image.height() <= 0)
+            return color(0, 1, 1);
 
-    u = interval(0, 1).clamp(u);
-    v = 1.0 - interval(0, 1).clamp(v);
+        u = interval(0, 1).clamp(u);
+        v = 1.0 - interval(0, 1).clamp(v);
 
-    auto i = static_cast<int>(u * image.width());
-    auto j = static_cast<int>(v * image.height());
-    auto pixel = image.pixel_data(i, j);
+        auto i = static_cast<int>(u * image.width());
+        auto j = static_cast<int>(v * image.height());
+        auto pixel = image.pixel_data(i, j);
 
-    auto color_scale = 1.0 / 255.0;
-    return color(color_scale * pixel[0], color_scale * pixel[1], color_scale * pixel[2]);
-  }
+        auto color_scale = 1.0 / 255.0;
+        return color(
+            color_scale * pixel[0],
+            color_scale * pixel[1],
+            color_scale * pixel[2]
+        );
+    }
 
-private:
-  rtw_image image;
+  private:
+    rtw_image image;
 };
 
 class noise_texture : public texture {
-public:
-  noise_texture(double _scale) : scale(_scale) {}
+  public:
+    noise_texture(double _scale) : scale(_scale) {}
 
-  color value(double u, double v, const point3& p) const override {
-    auto s = scale * p;
-    return color(1, 1, 1) * 0.5 * (1 + sin(s.z() + 10 * noise.turb(s)));
-  }
+    color value(double u, double v, const point3 &p) const override {
+        auto s = scale * p;
+        return color(1, 1, 1) * 0.5 * (1 + sin(s.z() + 10 * noise.turb(s)));
+    }
 
-private:
-  perlin noise;
-  double scale;
+  private:
+    perlin noise;
+    double scale;
 };
 
 #endif

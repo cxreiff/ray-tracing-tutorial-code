@@ -10,13 +10,19 @@
 void random_spheres() {
     hittable_list world;
 
-    auto checker = make_shared<checker_texture>(0.32, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
-    world.add(make_shared<sphere>(point3(0,-1000,0), 1000, make_shared<lambertian>(checker)));
+    auto checker = make_shared<checker_texture>(
+        0.32, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9)
+    );
+    world.add(make_shared<sphere>(
+        point3(0, -1000, 0), 1000, make_shared<lambertian>(checker)
+    ));
 
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             auto choose_mat = random_double();
-            point3 center = point3(a + 0.9 * random_double(), 0.2, b + 0.9 * random_double());
+            point3 center = point3(
+                a + 0.9 * random_double(), 0.2, b + 0.9 * random_double()
+            );
 
             if ((center - point3(4, 0.2, 0)).length() > 0.9) {
                 shared_ptr<material> sphere_material;
@@ -24,21 +30,26 @@ void random_spheres() {
                 if (choose_mat < 0.8) {
                     auto albedo = color::random() * color::random();
                     sphere_material = make_shared<lambertian>(albedo);
-                    /* auto center2 = center + vec3(0, random_double(0, 0.5), 0); */
-                    world.add(make_shared<sphere>(center, /* center2, */ 0.2, sphere_material));
+                    /* auto center2 = center + vec3(0, random_double(0, 0.5),
+                     * 0); */
+                    world.add(make_shared<sphere>(
+                        center, /* center2, */ 0.2, sphere_material
+                    ));
                 } else if (choose_mat < 0.95) {
                     auto albedo = color::random(0.5, 1);
                     auto fuzz = random_double(0, 0.5);
                     sphere_material = make_shared<metal>(albedo, fuzz);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                    world.add(make_shared<sphere>(center, 0.2, sphere_material)
+                    );
                 } else {
                     sphere_material = make_shared<dielectric>(1.5);
-                    world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                    world.add(make_shared<sphere>(center, 0.2, sphere_material)
+                    );
                 }
             }
         }
     }
-    
+
     auto material1 = make_shared<dielectric>(1.5);
     world.add(make_shared<sphere>(point3(0, 1, 0), 1.0, material1));
 
@@ -71,10 +82,16 @@ void random_spheres() {
 void two_spheres() {
     hittable_list world;
 
-    auto checker = make_shared<checker_texture>(0.05, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9));
+    auto checker = make_shared<checker_texture>(
+        0.05, color(0.2, 0.3, 0.1), color(0.9, 0.9, 0.9)
+    );
 
-    world.add(make_shared<sphere>(point3(0, -10, 0), 10, make_shared<lambertian>(checker)));
-    world.add(make_shared<sphere>(point3(0, 10, 0), 10, make_shared<lambertian>(checker)));
+    world.add(make_shared<sphere>(
+        point3(0, -10, 0), 10, make_shared<lambertian>(checker)
+    ));
+    world.add(make_shared<sphere>(
+        point3(0, 10, 0), 10, make_shared<lambertian>(checker)
+    ));
 
     camera cam;
 
@@ -119,8 +136,12 @@ void two_perlin_spheres() {
     hittable_list world;
 
     auto perlin_texture = make_shared<noise_texture>(4);
-    world.add(make_shared<sphere>(point3(0, -1000, 0), 1000, make_shared<lambertian>(perlin_texture)));
-    world.add(make_shared<sphere>(point3(0, 2, 0), 2, make_shared<lambertian>(perlin_texture)));
+    world.add(make_shared<sphere>(
+        point3(0, -1000, 0), 1000, make_shared<lambertian>(perlin_texture)
+    ));
+    world.add(make_shared<sphere>(
+        point3(0, 2, 0), 2, make_shared<lambertian>(perlin_texture)
+    ));
 
     camera cam;
 
@@ -133,7 +154,6 @@ void two_perlin_spheres() {
     cam.lookfrom = point3(12, 2, 3);
     cam.lookat = point3(0, 0, 0);
     cam.vup = vec3(0, 1, 0);
-
 
     cam.defocus_angle = 0;
 
@@ -149,11 +169,21 @@ void quads() {
     auto upper_orange = make_shared<lambertian>(color(1.0, 0.5, 0.0));
     auto lower_teal = make_shared<lambertian>(color(0.2, 0.8, 0.8));
 
-    world.add(make_shared<quad>(point3(-3, -2, 5), vec3(0, 0, -4), vec3(0, 4, 0), left_red));
-    world.add(make_shared<quad>(point3(-2, -2, 0), vec3(4, 0, 0), vec3(0, 4, 0), back_green));
-    world.add(make_shared<quad>(point3(3, -2, 1), vec3(0, 0, 4), vec3(0, 4, 0), right_blue));
-    world.add(make_shared<quad>(point3(-2, 3, 1), vec3(4, 0, 0), vec3(0, 0, 4), upper_orange));
-    world.add(make_shared<quad>(point3(-2, -3, 5), vec3(4, 0, 0), vec3(0, 0, -4), lower_teal));
+    world.add(make_shared<quad>(
+        point3(-3, -2, 5), vec3(0, 0, -4), vec3(0, 4, 0), left_red
+    ));
+    world.add(make_shared<quad>(
+        point3(-2, -2, 0), vec3(4, 0, 0), vec3(0, 4, 0), back_green
+    ));
+    world.add(make_shared<quad>(
+        point3(3, -2, 1), vec3(0, 0, 4), vec3(0, 4, 0), right_blue
+    ));
+    world.add(make_shared<quad>(
+        point3(-2, 3, 1), vec3(4, 0, 0), vec3(0, 0, 4), upper_orange
+    ));
+    world.add(make_shared<quad>(
+        point3(-2, -3, 5), vec3(4, 0, 0), vec3(0, 0, -4), lower_teal
+    ));
 
     camera cam;
 
@@ -174,10 +204,20 @@ void quads() {
 
 int main() {
     switch (5) {
-        case 1: random_spheres(); break;
-        case 2: two_spheres(); break;
-        case 3: earth(); break;
-        case 4: two_perlin_spheres(); break;
-        case 5: quads(); break;
+    case 1:
+        random_spheres();
+        break;
+    case 2:
+        two_spheres();
+        break;
+    case 3:
+        earth();
+        break;
+    case 4:
+        two_perlin_spheres();
+        break;
+    case 5:
+        quads();
+        break;
     }
 }

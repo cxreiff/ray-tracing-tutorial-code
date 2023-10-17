@@ -46,7 +46,7 @@ class perlin {
         return perlin_interp(c, u, v, w);
     }
 
-    double turb(const point3& p, int depth = 7) const {
+    double turb(const point3 &p, int depth = 7) const {
         auto acc = 0.0;
         auto temp_p = p;
         auto weight = 1.0;

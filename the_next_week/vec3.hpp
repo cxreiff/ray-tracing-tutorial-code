@@ -126,7 +126,7 @@ inline vec3 random_unit_vector() {
     return unit_vector(random_in_unit_sphere());
 }
 
-inline vec3 random_on_hemisphere(const vec3& normal) {
+inline vec3 random_on_hemisphere(const vec3 &normal) {
     vec3 on_unit_sphere = random_unit_vector();
     if (dot(on_unit_sphere, normal) > 0.0) {
         return on_unit_sphere;
@@ -135,14 +135,15 @@ inline vec3 random_on_hemisphere(const vec3& normal) {
     }
 }
 
-inline vec3 reflect(const vec3& v, const vec3& n) {
+inline vec3 reflect(const vec3 &v, const vec3 &n) {
     return v - 2 * dot(v, n) * n;
 }
 
-inline vec3 refract(const vec3& uv, const vec3& n, double etai_over_etat) {
+inline vec3 refract(const vec3 &uv, const vec3 &n, double etai_over_etat) {
     auto cos_theta = fmin(dot(-uv, n), 1.0);
     vec3 r_out_perpendicular = etai_over_etat * (uv + cos_theta * n);
-    vec3 r_out_parallel = -sqrt(fabs(1.0 - r_out_perpendicular.length_squared())) * n;
+    vec3 r_out_parallel =
+        -sqrt(fabs(1.0 - r_out_perpendicular.length_squared())) * n;
     return r_out_perpendicular + r_out_parallel;
 }
 

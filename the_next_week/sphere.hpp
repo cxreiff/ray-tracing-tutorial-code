@@ -9,13 +9,20 @@
 class sphere : public hittable {
   public:
     sphere(point3 _center, double _radius, shared_ptr<material> _material)
-        : center1(_center), radius(_radius), material(_material), is_moving(false) {
+        : center1(_center), radius(_radius), material(_material),
+          is_moving(false) {
         auto rvec = vec3(radius, radius, radius);
         bbox = aabb(center1 - rvec, center1 + rvec);
     }
 
-    sphere(point3 _center1, point3 _center2, double _radius, shared_ptr<material> _material)
-        : center1(_center1), radius(_radius), material(_material), is_moving(true) {
+    sphere(
+        point3 _center1,
+        point3 _center2,
+        double _radius,
+        shared_ptr<material> _material
+    )
+        : center1(_center1), radius(_radius), material(_material),
+          is_moving(true) {
         auto rvec = vec3(radius, radius, radius);
         aabb box1(_center1 - rvec, _center1 + rvec);
         aabb box2(_center2 - rvec, _center2 + rvec);
@@ -67,7 +74,7 @@ class sphere : public hittable {
         return center1 + time * center_vec;
     }
 
-    static void get_sphere_uv(const point3& p, double& u, double& v) {
+    static void get_sphere_uv(const point3 &p, double &u, double &v) {
         auto theta = acos(-p.y());
         auto phi = atan2(-p.z(), p.x()) + pi;
         u = phi / (2 * pi);

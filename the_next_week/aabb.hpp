@@ -21,7 +21,7 @@ class aabb {
         z = interval(fmin(a[2], b[2]), fmax(a[2], b[2]));
     }
 
-    aabb(const aabb& box0, const aabb& box1) {
+    aabb(const aabb &box0, const aabb &box1) {
         x = interval(box0.x, box1.x);
         y = interval(box0.y, box1.y);
         z = interval(box0.z, box1.z);
@@ -56,8 +56,10 @@ class aabb {
                 std::swap(t0, t1);
             }
 
-            if (t0 > ray_t.min) ray_t.min = t0;
-            if (t1 < ray_t.max) ray_t.max = t1;
+            if (t0 > ray_t.min)
+                ray_t.min = t0;
+            if (t1 < ray_t.max)
+                ray_t.max = t1;
 
             if (ray_t.max <= ray_t.min) {
                 return false;
