@@ -86,6 +86,7 @@ class image_texture : public texture {
 
 class noise_texture : public texture {
   public:
+    noise_texture() {}
     noise_texture(double _scale) : scale(_scale) {}
 
     color value(double u, double v, const point3 &p) const override {
